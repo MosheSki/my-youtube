@@ -1,0 +1,18 @@
+export const list = [
+  "All",
+  "Gaming",
+  "Songs",
+  "Live",
+  "Soccer",
+  "Comedy",
+  "Racing",
+  "News",
+  "Rap",
+  "Rock",
+  "For You",
+  "Last Watched",
+  "Food",
+  "18+",
+  "Animals",
+  "Nature",
+];
