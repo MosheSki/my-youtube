@@ -20,19 +20,21 @@ const VideoCard = ({ data }) => {
       <ul>
         <li className="font-bold py-2">{title}</li>
         <li className="font-thin">{channelTitle}</li>
-        <li>{formatViewCount(statistics.viewCount)} Views</li>
+        {/* {statistics.viewCount && (
+          <li>{formatViewCount(statistics.viewCount)} Views</li>
+        )} */}
       </ul>
     </div>
   );
 };
 
 //higher-order function
-// export const AdVideoCard = ({ data }) => {
-//   return (
-//     <div className="p-1 m-1 border border-red-800 ">
-//       <VideoCard data={data} />
-//     </div>
-//   );
-// };
+export const AdVideoCard = ({ data }) => {
+  return (
+    <div className="p-1 m-1 border border-red-800 ">
+      <VideoCard data={data} />
+    </div>
+  );
+};
 
 export default VideoCard;

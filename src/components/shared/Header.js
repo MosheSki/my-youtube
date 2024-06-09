@@ -3,15 +3,23 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../../utils/redux/appSlice";
-import { LOGO_URL, YOUTUBE_SEARCH_API } from "../../utils/constants";
+import {
+  LOGO_URL,
+  YOUTUBE_SEARCH_API,
+  YOUTUBE_SEARCH_RESULTS_API,
+} from "../../utils/constants";
 import { useEffect, useState } from "react";
 import { cacheResults } from "../../utils/redux/searchSlice";
+import { videoResults } from "../../utils/redux/searchSlice";
+import { useNavigate } from "react-router-dom";
+import MainContainer from "./MainContainer";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [suggestionResults, setSuggestionResults] = useState([]);
 
   const searchCache = useSelector((store) => store.search);
   const dispatch = useDispatch();
@@ -45,6 +53,24 @@ const Header = () => {
     );
   };
 
+  useEffect(() => {
+    // getSuggestionResults();
+  }, []);
+
+  const getSuggestionResults = async (suggestion) => {
+    const data = await fetch(YOUTUBE_SEARCH_RESULTS_API + suggestion);
+    const json = await data.json();
+    console.log(json.items);
+    setSuggestionResults(json.items);
+    dispatch(videoResults(json.items));
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    getSuggestionResults(suggestion);
+
+    setSearchQuery("");
+  };
+
   onscroll = () => {
     if (window.scrollY === 0) {
       setIsScrolled(false);
@@ -65,7 +91,9 @@ const Header = () => {
           onClick={() => toggleMenuHandler()}
           style={{ fontSize: 30 }}
         />
-        <img className="h-7" alt="logo" src={LOGO_URL} />
+        <a href="/">
+          <img className="h-7" alt="logo" src={LOGO_URL} />
+        </a>
       </div>
       <div className="col-span-10 px-10">
         <div className="relative flex">
@@ -86,6 +114,7 @@ const Header = () => {
             <ul>
               {suggestions.map((suggestion) => (
                 <li
+                  onClick={() => handleSuggestionClick(suggestion)}
                   key={suggestion}
                   className="py-3 px-5 hover:bg-gray-100 shadow-sm cursor-pointer"
                 >
