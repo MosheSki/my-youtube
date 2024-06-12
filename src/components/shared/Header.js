@@ -11,15 +11,13 @@ import {
 import { useEffect, useState } from "react";
 import { cacheResults } from "../../utils/redux/searchSlice";
 import { videoResults } from "../../utils/redux/searchSlice";
-import { useNavigate } from "react-router-dom";
-import MainContainer from "./MainContainer";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [suggestionResults, setSuggestionResults] = useState([]);
 
   const searchCache = useSelector((store) => store.search);
   const dispatch = useDispatch();
@@ -53,21 +51,15 @@ const Header = () => {
     );
   };
 
-  useEffect(() => {
-    // getSuggestionResults();
-  }, []);
-
   const getSuggestionResults = async (suggestion) => {
     const data = await fetch(YOUTUBE_SEARCH_RESULTS_API + suggestion);
     const json = await data.json();
-    console.log(json.items);
-    setSuggestionResults(json.items);
+
     dispatch(videoResults(json.items));
   };
 
   const handleSuggestionClick = (suggestion) => {
     getSuggestionResults(suggestion);
-
     setSearchQuery("");
   };
 
@@ -113,13 +105,17 @@ const Header = () => {
           <div className="absolute w-[36%] bg-white rounded-lg shadow-lg border border-gray-100">
             <ul>
               {suggestions.map((suggestion) => (
-                <li
-                  onClick={() => handleSuggestionClick(suggestion)}
+                <Link
                   key={suggestion}
-                  className="py-3 px-5 hover:bg-gray-100 shadow-sm cursor-pointer"
+                  to={"/results?search_query=" + suggestion}
                 >
-                  {suggestion}
-                </li>
+                  <li
+                    onClick={() => handleSuggestionClick(suggestion)}
+                    className="py-3 px-5 hover:bg-gray-100 shadow-sm cursor-pointer"
+                  >
+                    {suggestion}
+                  </li>
+                </Link>
               ))}
             </ul>
           </div>

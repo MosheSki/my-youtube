@@ -7,7 +7,11 @@ import LiveChat from "../shared/LiveChat";
 
 const WatchPage = () => {
   const [searchParams] = useSearchParams();
-  // const videosFromSearch = useSelector((store) => store.search.videoResults);
+
+  const data = useSelector((store) => store.app.currentVideo);
+
+  const { snippet, statistics } = data;
+  const { channelTitle, title, thumbnails, publishedAt, description } = snippet;
 
   const dispatch = useDispatch();
 
@@ -30,6 +34,16 @@ const WatchPage = () => {
             allowFullScreen
           ></iframe>
         </div>
+        <div className="p-2 m-2">
+          <h1 className="font-bold py-2 text-2xl">{title}</h1>
+          <h2 className="font-thin text-lg">{channelTitle}</h2>
+        </div>
+        {description && (
+          <div className="p-2 m-2 w-[1000px] h-[160px] overflow-y-auto border border-gray-200 bg-gray-200 shadow-lg rounded-lg">
+            <p className="">{description}</p>
+          </div>
+        )}
+
         <div className="flex-1">
           <CommentsContainer />
         </div>
